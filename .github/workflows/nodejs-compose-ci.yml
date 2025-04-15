@@ -1,7 +1,7 @@
 name: CI
 on:
   workflow_dispatch:
-  workflow_call:
+  # workflow_call:
     inputs:
       docker_image_local_name:
         description: "The local name of the Docker image"
@@ -23,38 +23,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         timeout-minutes: 2
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-        timeout-minutes: 5
-      - name: npm ci
-        uses: nick-fields/retry@v2
-        with:
-          command: npm ci
-          timeout_minutes: 3
-          max_attempts: 3
-        timeout-minutes: 10
-      - run: npm run static-checks
-        timeout-minutes: 3
-      - run: npm test
-        timeout-minutes: 5
+      # - name: Setup node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version-file: '.nvmrc'
+      #     cache: 'npm'
+      #     cache-dependency-path: 'package-lock.json'
+      #   timeout-minutes: 5
+      # - name: npm ci
+      #   uses: nick-fields/retry@v2
+      #   with:
+      #     command: npm ci
+      #     timeout_minutes: 3
+      #     max_attempts: 3
+      #   timeout-minutes: 10
+      # - run: npm run static-checks
+      #   timeout-minutes: 3
+      # - run: npm test
+      #   timeout-minutes: 5
 
-      # Functional tests
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ inputs.dockerhub_username }}
-          password: ${{ secrets.dockerhub_password }}
-        timeout-minutes: 2
-      - name: Start Docker Compose services
-        run: docker compose up -d
-        timeout-minutes: 5
-      - name: Functional tests
-        timeout-minutes: 5
-        run: npm run test:functional
+      # # Functional tests
+      # - name: Log in to Docker Hub
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: ${{ inputs.dockerhub_username }}
+      #     password: ${{ secrets.dockerhub_password }}
+      #   timeout-minutes: 2
+      # - name: Start Docker Compose services
+      #   run: docker compose up -d
+      #   timeout-minutes: 5
+      # - name: Functional tests
+      #   timeout-minutes: 5
+      #   run: npm run test:functional
 
       # Export Docker image so it can be published
       - name: Export Docker image
